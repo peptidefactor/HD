@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | Peptides Factory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary-color: #0a2540; --accent-color: #00d4b2; --text-dark: #333; --bg-light: #f8f9fa; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: var(--text-dark); background-color: #fff; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; border-bottom: 1px solid #eee; background: #fff; position: sticky; top: 0; z-index: 100; }
+        .logo-img { height: 90px; width: auto; object-fit: contain; }
+        nav a { margin: 0 15px; text-decoration: none; color: var(--text-dark); font-weight: 500; transition: 0.3s; }
+        nav a:hover { color: var(--accent-color); }
+        footer { background-color: #0d1117; color: #9ca3af; padding: 60px 5% 30px; font-size: 14px; margin-top: 60px; text-align: center;}
+        .cart-count { background: var(--accent-color); color: white; padding: 2px 6px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-left: 5px; }
+
+        .detail-container { max-width: 1200px; margin: 50px auto; padding: 0 20px; display: flex; gap: 50px; flex-wrap: wrap; }
+        .product-image { flex: 1; min-width: 300px; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 40px; }
+        .product-image img { width: 100%; max-width: 400px; object-fit: contain; }
+        .product-info { flex: 1; min-width: 300px; display: flex; flex-direction: column; }
+        .breadcrumb { font-size: 14px; color: #666; margin-bottom: 15px; }
+        .breadcrumb a { color: var(--primary-color); text-decoration: none; }
+        .product-info h1 { font-size: 36px; color: var(--primary-color); margin: 0 0 15px; }
+        .price-display { font-size: 32px; font-weight: bold; color: var(--accent-color); margin-bottom: 20px; }
+        .stock-badge { display: inline-block; background: #e6f9f5; color: #00a88d; padding: 5px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 20px; }
+        .description { line-height: 1.6; color: #555; margin-bottom: 30px; font-size: 16px; }
+        
+        .spec-section h3 { margin-bottom: 15px; font-size: 16px; color: var(--primary-color); }
+        .spec-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+        .spec-btn { padding: 10px 15px; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.3s; color: var(--text-dark); }
+        .spec-btn:hover { border-color: var(--primary-color); }
+        .spec-btn.active { border-color: var(--primary-color); background: var(--primary-color); color: white; }
+
+        .buy-btn { background-color: var(--accent-color); color: #fff; padding: 18px 30px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; transition: 0.3s; display: inline-flex; justify-content: center; align-items: center; gap: 10px; width: fit-content;}
+        .buy-btn:hover { background-color: #00b598; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,212,178,0.2); }
+        .error-msg { text-align: center; margin: 100px auto; font-size: 20px; color: #666; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-container"><img src="logo.png" alt="Logo" class="logo-img"></a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="index.html#shop">Shop</a>
+            <a href="cart.html" id="nav-cart"><i class="fas fa-shopping-cart"></i> Cart <span class="cart-count" id="cart-count">0</span></a>
+        </nav>
+    </header>
+
+    <div class="detail-container" id="dynamic-detail-box">
+        </div>
+
+    <footer>
+        <div>Copyright © 2026 Peptides Factory. All Rights Reserved.</div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script>
+        // 1. Capture Product ID from URL parameters (?id=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        // 2. Query product match from data array
+        const product = PRODUCTS_DATA.find(p => p.id === productId);
+        const container = document.getElementById('dynamic-detail-box');
+
+        if (!product) {
+            container.innerHTML = `<div class="error-msg"><i class="fas fa-exclamation-triangle"></i><p>Product not found.</p><a href="index.html" style="color:var(--primary-color)">Return to Home</a></div>`;
+        } else {
+            // 3. Inject standard layout nodes dynamically 
+            container.innerHTML = `
+                <div class="product-image"><img src="${product.image}" alt="${product.name}"></div>
+                <div class="product-info">
+                    <div class="breadcrumb"><a href="index.html">Home</a> > <a href="index.html#shop">Products</a> > ${product.name}</div>
+                    <h1>${product.name}</h1>
+                    <div class="stock-badge"><i class="fas fa-check-circle"></i> In Stock | HPLC Verified</div>
+                    <div class="price-display" id="price">$0.00</div>
+                    <p class="description">${product.description}</p>
+                    <div class="spec-section">
+                        <h3>Select Specification (× 10 vials):</h3>
+                        <div class="spec-grid" id="spec-container"></div>
+                    </div>
+                    <button class="buy-btn" id="add-to-cart-btn"><i class="fas fa-shopping-cart" style="font-size:22px;"></i> Add to Cart</button>
+                </div>
+            `;
+
+            const specContainer = document.getElementById('spec-container');
+            const priceDisplay = document.getElementById('price');
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            let currentSelection = product.variants[0];
+
+            // 4. Specs variant action layout logic
+            function selectSpec(index) {
+                document.querySelectorAll('.spec-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
+                currentSelection = product.variants[index];
+                priceDisplay.textContent = `$${currentSelection.price.toFixed(2)}`;
+            }
+
+            // Loop out dynamic configuration specs buttons
+            product.variants.forEach((v, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'spec-btn';
+                btn.textContent = v.spec;
+                btn.onclick = () => selectSpec(index);
+                specContainer.appendChild(btn);
+            });
+            selectSpec(0);
+
+            // 5. Shared Navbar Cart Counting Sync
+            function updateCartCount() {
+                let cart = JSON.parse(localStorage.getItem('peptides_cart')) || [];
+                document.getElementById('cart-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            }
+            updateCartCount();
+
+            // 6. LocalStorage Add Actions Processing 
+            addToCartBtn.addEventListener('click', () => {
+                let cart = JSON.parse(localStorage.getItem('peptides_cart')) || [];
+                let existingItem = cart.find(item => item.name === product.name && item.spec === currentSelection.spec);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        name: product.name,
+                        spec: currentSelection.spec,
+                        price: currentSelection.price,
+                        quantity: 1,
+                        image: product.image
+                    });
+                }
+
+                localStorage.setItem('peptides_cart', JSON.stringify(cart));
+                updateCartCount();
+
+                const originalHTML = addToCartBtn.innerHTML;
+                addToCartBtn.innerHTML = '<i class="fas fa-check" style="font-size: 22px;"></i> Added to Cart!';
+                addToCartBtn.style.backgroundColor = '#25D366';
+                setTimeout(() => {
+                    addToCartBtn.innerHTML = originalHTML;
+                    addToCartBtn.style.backgroundColor = '';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>
