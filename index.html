@@ -136,12 +136,67 @@
         </div>
     </footer>
 
-    <a href="https://wa.me/85252638529" class="float-btn" target="_blank" aria-label="Contact us on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <!-- 社交按钮组合容器 -->
+    <div class="social-contact-wrapper">
+        <!-- Telegram 按钮 -->
+        <a href="https://t.me/PeptidesIris" class="social-btn tg-color" target="_blank" aria-label="Contact us on Telegram">
+            <i class="fab fa-telegram-plane"></i>
+        </a>
+        <!-- WhatsApp 按钮 -->
+        <a href="https://wa.me/85252638529" class="social-btn wa-color" target="_blank" aria-label="Contact us on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <style>
+        /* 1. 容器：控制整体位置 */
+        .social-contact-wrapper {
+            position: fixed;
+            bottom: 30px; /* 距离底部距离 */
+            right: 30px;  /* 距离右侧距离 */
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+            gap: 15px; /* 两个图标之间的间距 */
+            z-index: 10000; /* 确保在最上层 */
+        }
+
+        /* 2. 通用按钮样式 */
+        .social-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* 3. 悬停效果 */
+        .social-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* 4. 各自的颜色 */
+        .tg-color { background-color: #26A5E4; }
+        .tg-color:hover { background-color: #229ED9; }
+        
+        .wa-color { background-color: #25D366; }
+        .wa-color:hover { background-color: #20BA5A; }
+
+        /* 5. 隐藏掉旧的样式，防止干扰 (可选) */
+        .float-btn { display: none !important; }
+    </style>
 
     <script src="data.js"></script>
     <script>
+        // 保持原有的渲染逻辑不变
         function renderProductsList() {
             const grid = document.getElementById('main-product-grid');
+            if (!grid) return;
             grid.innerHTML = '';
             PRODUCTS_DATA.forEach(product => {
                 grid.innerHTML += `
@@ -163,7 +218,8 @@
         function updateCartCount() {
             let cart = JSON.parse(localStorage.getItem('peptides_cart')) || [];
             let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cart-count').textContent = totalItems;
+            const countEl = document.getElementById('cart-count');
+            if (countEl) countEl.textContent = totalItems;
         }
         updateCartCount();
     </script>
