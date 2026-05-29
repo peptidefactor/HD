@@ -59,8 +59,8 @@ const PRODUCTS_DATA = [
         priceRange: "$57.00 – $114.00",
         description: "Premium grade 5-amino-1mq research chemical. Manufactured under strict laboratory conditions to ensure 99%+ purity. Provided in high-quality form for developmental research.",
         variants: [
-            { spec: "50mg", price: 57.00 },
-            { spec: "100mg", price: 114.00 }
+            { spec: "5mg", price: 57.00 },
+            { spec: "50mg", price: 114.00 }
         ]
     },
     {
@@ -71,8 +71,7 @@ const PRODUCTS_DATA = [
         description: "Premium grade Adipotide research peptide. Manufactured under strict laboratory conditions to ensure 99%+ purity. Provided in lyophilized powder form.",
         variants: [
             { spec: "2mg", price: 86.00 },
-            { spec: "5mg", price: 135.00 },
-            { spec: "10mg", price: 186.00 }
+            { spec: "5mg", price: 186.00 },
         ]
     },
     {
